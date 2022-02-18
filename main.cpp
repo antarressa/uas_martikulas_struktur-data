@@ -214,10 +214,10 @@ void renderList(){
   char nimMhs[10];
   char kodeMtl[5];
 
-  cout<<"                                  DATA NILA MAHASISWA                                  "<< endl;
-  cout<<"======================================================================================="<< endl;
+  cout<<"                                  DATA NILAI MAHASISWA                                  "<< endl;
+  cout<<"========================================================================================"<< endl;
   cout<<"NO.| NIM | NAMA | JURUSAN | KODEMTK | NAMAMTK | SKS | UTS | TUGAS | UAS | AKHIR | GRADE"<< endl;
-  cout<<"======================================================================================="<< endl;
+  cout<<"========================================================================================"<< endl;
   int totalNil = sizeof(nil)/sizeof(nil[0]);
   bool hasFilledData = false;
   for(int i = 0; i < totalNil; i++){
