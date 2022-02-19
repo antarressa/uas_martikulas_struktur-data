@@ -11,14 +11,14 @@ char escChar = 27; // the decimal code for escape character is 27
 // GLOBAL VARIABLE DECRARATION AS TEMPORARY DATABASE
 struct Mahasiwa {
   char nim[10];
-  char nama[32];
+  string nama;
   char jurusan[10];
 };
 Mahasiwa mhs[4];
 
 struct Matakuliah {
   char kode[5];
-  char nama[10];
+  string nama;
   int bobot;
 };
 Matakuliah mtl[4];
@@ -61,6 +61,16 @@ char getGrade(int a){
   }
 }
 
+int getMaxMhs(){
+  int totalMhs = sizeof(mhs)/sizeof(mhs[0]);
+  return totalMhs;
+}
+
+int getMaxMtl(){
+  int totalMtl = sizeof(mtl)/sizeof(mtl[0]);
+  return totalMtl;
+}
+
 int getIdxMhsByNim(char *nimMhs){
   int totalMhs = sizeof(mhs)/sizeof(mhs[0]);
   bool foundMhs = false;
@@ -94,11 +104,14 @@ void renderMhs(){
     cout<<"             INPUT DATA MAHASISWA             "<< endl;
     cout<<"=============================================="<< endl;
 
+    cout<<"INPUT MAHASISWA KE "<<index+1<<". MAX("<<getMaxMhs()<<")"<< endl;
+
     cout<<"NIM = ";
     cin>>mhs[index].nim;
 
+    cin.ignore();
     cout<<"NAMA = ";
-    cin>>mhs[index].nama;
+    getline(cin, mhs[index].nama);
 
     cout<<"JURUSAN = ";
     cin>>mhs[index].jurusan;
@@ -117,11 +130,14 @@ void renderMtl(){
     cout<<"             INPUT DATA MATAKULIAH             "<< endl;
     cout<<"==============================================="<< endl;
 
+    cout<<"INPUT MATAKULIAH KE "<<index+1<<". MAX("<<getMaxMhs()<<")"<< endl;
+
     cout<<"Kode Matakuliah = ";
     cin>>mtl[index].kode;
 
+    cin.ignore();
     cout<<"Nama Matakuliah = ";
-    cin>>mtl[index].nama;
+    getline(cin, mtl[index].nama);
 
     cout<<"BOBOT SKS = ";
     cin>>mtl[index].bobot;
@@ -214,10 +230,10 @@ void renderList(){
   char nimMhs[10];
   char kodeMtl[5];
 
-  cout<<"                                  DATA NILAI MAHASISWA                                  "<< endl;
-  cout<<"========================================================================================"<< endl;
+  cout<<"                                  DATA NILA MAHASISWA                                  "<< endl;
+  cout<<"======================================================================================="<< endl;
   cout<<"NO.| NIM | NAMA | JURUSAN | KODEMTK | NAMAMTK | SKS | UTS | TUGAS | UAS | AKHIR | GRADE"<< endl;
-  cout<<"========================================================================================"<< endl;
+  cout<<"======================================================================================="<< endl;
   int totalNil = sizeof(nil)/sizeof(nil[0]);
   bool hasFilledData = false;
   for(int i = 0; i < totalNil; i++){
