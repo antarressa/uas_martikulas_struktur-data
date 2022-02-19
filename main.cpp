@@ -2,6 +2,7 @@
 #include <string>
 #include <map>
 #include <cstring>
+#include <vector>
 
 using namespace std;
 
@@ -9,19 +10,20 @@ using namespace std;
 char escChar = 27; // the decimal code for escape character is 27
 
 // GLOBAL VARIABLE DECRARATION AS TEMPORARY DATABASE
-struct Mahasiwa {
+struct Mahasiswa {
   char nim[10];
   string nama;
   char jurusan[10];
 };
-Mahasiwa mhs[4];
+// Mahasiswa mhs[0];
+std::vector<Mahasiswa> mhs;
 
 struct Matakuliah {
   char kode[5];
   string nama;
   int bobot;
 };
-Matakuliah mtl[4];
+std::vector<Matakuliah> mtl;
 
 struct Nilai {
   char nimMhs[10];
@@ -30,7 +32,7 @@ struct Nilai {
   int tugas;
   int uas;
 };
-Nilai nil[8];
+std::vector<Nilai> nil;
 
 // FUNCTION
 void clear() {
@@ -62,17 +64,19 @@ char getGrade(int a){
 }
 
 int getMaxMhs(){
-  int totalMhs = sizeof(mhs)/sizeof(mhs[0]);
-  return totalMhs;
+  return mhs.size();
 }
 
 int getMaxMtl(){
-  int totalMtl = sizeof(mtl)/sizeof(mtl[0]);
-  return totalMtl;
+  return mtl.size();
+}
+
+int getMaxNil(){
+  return nil.size();
 }
 
 int getIdxMhsByNim(char *nimMhs){
-  int totalMhs = sizeof(mhs)/sizeof(mhs[0]);
+  int totalMhs = getMaxMhs();
   bool foundMhs = false;
   int indexMhs = -1;
   for(int i = 0; i < totalMhs; i++){
@@ -85,7 +89,7 @@ int getIdxMhsByNim(char *nimMhs){
 }
 
 int getIdxMtlByKode(char *kodeMtl){
-  int totalMtl = sizeof(mtl)/sizeof(mtl[0]);
+  int totalMtl = getMaxMtl();
   bool foundMtl = false;
   int indexMtl = -1;
   for(int i = 0; i < totalMtl; i++){
@@ -99,11 +103,19 @@ int getIdxMtlByKode(char *kodeMtl){
 
 void renderMhs(){
   clear();
+  cout<<"             INPUT DATA MAHASISWA             "<< endl;
+  cout<<"=============================================="<< endl;
+
+  if(getMaxMhs() < 1){
+    int size;
+    cout<<"Input Jumlah Mahasiswa = ";
+    cin>>size;
+    cout<<endl;
+    mhs.resize(size);
+  }
+
   int index = getIdxMhsByNim("");
   if(index >= 0){
-    cout<<"             INPUT DATA MAHASISWA             "<< endl;
-    cout<<"=============================================="<< endl;
-
     cout<<"INPUT MAHASISWA KE "<<index+1<<". MAX("<<getMaxMhs()<<")"<< endl;
 
     cout<<"NIM = ";
@@ -116,6 +128,17 @@ void renderMhs(){
     cout<<"JURUSAN = ";
     cin>>mhs[index].jurusan;
 
+    int index = getIdxMhsByNim("");
+    if(index >= 0){
+      char wantContinue;
+      cout << escChar << "[1m" << "Pilih Y" << escChar << "[0m" << " untuk menginput data berikutnya" << endl;
+      cin>>wantContinue;
+      if(wantContinue == 'y' || wantContinue == 'Y'){
+        renderMhs();
+        return;
+      }
+    }
+
     cout<<"Data berhasil tersimpan!"<< endl;
 
   } else {
@@ -125,12 +148,22 @@ void renderMhs(){
 
 void renderMtl(){
   clear();
+
+  cout<<"             INPUT DATA MATAKULIAH             "<< endl;
+  cout<<"==============================================="<< endl;
+
+  if(getMaxMtl() < 1){
+    int size;
+    cout<<"Input Jumlah Matakuliah = ";
+    cin>>size;
+    cout<<endl;
+    mtl.resize(size);
+  }
+
   int index = getIdxMtlByKode("");
   if(index >= 0){
-    cout<<"             INPUT DATA MATAKULIAH             "<< endl;
-    cout<<"==============================================="<< endl;
 
-    cout<<"INPUT MATAKULIAH KE "<<index+1<<". MAX("<<getMaxMhs()<<")"<< endl;
+    cout<<"INPUT MATAKULIAH KE "<<index+1<<". MAX("<<getMaxMtl()<<")"<< endl;
 
     cout<<"Kode Matakuliah = ";
     cin>>mtl[index].kode;
@@ -142,6 +175,17 @@ void renderMtl(){
     cout<<"BOBOT SKS = ";
     cin>>mtl[index].bobot;
 
+    int index = getIdxMtlByKode("");
+    if(index >= 0){
+      char wantContinue;
+      cout << escChar << "[1m" << "Pilih Y" << escChar << "[0m" << " untuk menginput data berikutnya" << endl;
+      cin>>wantContinue;
+      if(wantContinue == 'y' || wantContinue == 'Y'){
+        renderMtl();
+        return;
+      }
+    }
+
     cout<<"Data berhasil tersimpan!"<< endl;
 
   } else {
@@ -151,11 +195,25 @@ void renderMtl(){
 
 void renderNil(){
   clear();
-  char nimMhs[10];
-  char kodeMtl[5];
 
   cout<<"             INPUT NILAI             "<< endl;
   cout<<"====================================="<< endl;
+
+  if(getMaxMhs() < 1){
+    cout<<"Silahkan Input Mahasiswa terlebih dahulu!"<< endl;
+    return;
+  }
+  else if(getMaxMtl() < 1){
+    cout<<"Silahkan Input Matakuliah terlebih dahulu!"<< endl;
+    return;
+  }
+
+  if(getMaxNil() < 1){
+    nil.resize(getMaxMhs() * getMaxMtl());
+  }
+
+  char nimMhs[10];
+  char kodeMtl[5];
 
   cout<<"Input NIM = ";
   cin>>nimMhs;
@@ -185,7 +243,7 @@ void renderNil(){
     return;
   }
 
-  int totalNil = sizeof(nil)/sizeof(nil[0]);
+  int totalNil = getMaxNil();
   bool alreadyFilled = false;
   bool canContinue = false;
   int index = 0;
@@ -234,7 +292,7 @@ void renderList(){
   cout<<"======================================================================================="<< endl;
   cout<<"NO.| NIM | NAMA | JURUSAN | KODEMTK | NAMAMTK | SKS | UTS | TUGAS | UAS | AKHIR | GRADE"<< endl;
   cout<<"======================================================================================="<< endl;
-  int totalNil = sizeof(nil)/sizeof(nil[0]);
+  int totalNil = getMaxNil();
   bool hasFilledData = false;
   for(int i = 0; i < totalNil; i++){
     if(*nil[i].nimMhs){
