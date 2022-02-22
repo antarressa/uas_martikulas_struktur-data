@@ -3,6 +3,7 @@
 #include <map>
 #include <cstring>
 #include <vector>
+#include <stdlib.h>
 
 using namespace std;
 
@@ -13,7 +14,7 @@ char escChar = 27; // the decimal code for escape character is 27
 struct Mahasiswa {
   char nim[10];
   string nama;
-  char jurusan[10];
+  string jurusan;
 };
 // Mahasiswa mhs[0];
 std::vector<Mahasiswa> mhs;
@@ -101,6 +102,12 @@ int getIdxMtlByKode(char *kodeMtl){
   return indexMtl;
 }
 
+void renderPositiveValidation(){
+  cout<<"---------------------------------------------"<< endl;
+  cout<<"Harap masukan nilai positif atau lebih dari 1"<< endl;
+  cout<<"---------------------------------------------"<< endl;
+}
+
 void renderMhs(){
   clear();
   cout<<"             INPUT DATA MAHASISWA             "<< endl;
@@ -126,7 +133,7 @@ void renderMhs(){
     getline(cin, mhs[index].nama);
 
     cout<<"JURUSAN = ";
-    cin>>mhs[index].jurusan;
+    getline(cin, mhs[index].jurusan);
 
     int index = getIdxMhsByNim("");
     if(index >= 0){
@@ -261,14 +268,29 @@ void renderNil(){
     strcpy(nil[index].nimMhs,nimMhs);
     strcpy(nil[index].kodeMtl,kodeMtl);
 
-    cout<<"Input Nilai UTS = ";
-    cin>>nil[index].uts;
+    while(!nil[index].uts || nil[index].uts < 0){
+      if(nil[index].uts < 0){
+        renderPositiveValidation();
+      }
+      cout<<"Input Nilai UTS = ";
+      cin>>nil[index].uts;
+    }
 
-    cout<<"Input Nilai TUGAS = ";
-    cin>>nil[index].tugas;
+    while(!nil[index].tugas || nil[index].tugas < 0){
+      if(nil[index].tugas < 0){
+        renderPositiveValidation();
+      }
+      cout<<"Input Nilai TUGAS = ";
+      cin>>nil[index].tugas;
+    }
 
-    cout<<"Input Nilai UAS = ";
-    cin>>nil[index].uas;
+    while(!nil[index].uas || nil[index].uas < 0){
+      if(nil[index].uas < 0){
+        renderPositiveValidation();
+      }
+      cout<<"Input Nilai UAS = ";
+      cin>>nil[index].uas;
+    }
 
     int totalNilai = getTotalNil(nil[index].uts,nil[index].tugas,nil[index].uas);
 
